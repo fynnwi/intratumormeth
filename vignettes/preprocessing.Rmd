@@ -3,7 +3,7 @@ title: "Preprocessing"
 output: rmarkdown::html_vignette
 bibliography: "../bibliography.bib"
 vignette: >
-  %\VignetteIndexEntry{preprocessing}
+  %\VignetteIndexEntry{Preprocessing}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
