@@ -1,0 +1,113 @@
+---
+title: "Preprocessing"
+output: rmarkdown::html_vignette
+bibliography: "../bibliography.bib"
+vignette: >
+  %\VignetteIndexEntry{preprocessing}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+## Introduction
+
+This vignette shows the preprocessing workflow used to analyze raw IDAT files from Illumina HumanMethylationEPIC microarrays.
+After reading in the intensity levels, the following steps will be performed:
+
+- calculate detection p-values based on control probes using `minfi::detectionP()`,
+- conversion of intensity levels into methylation beta-values and M-values using `minfi::preprocessRaw()`,
+- normalization in order to account for the two different probe types employed on the array and other systematic biases of the platform via: 
+  - `minfi::preprocessSWAN()`,
+  - `minfi::preprocessNoob()`,
+  - `minfi::preprocessQuantile()`.
+  
+The resulting data will be saved to the specified output directory.
+
+After this first preprocessing step, methylation data can be obtained using function `get_beta()` which allows to specify the normalization method, as well as a probe filter and a sample filter.
+Probe filtering has been suggested repeatedly in literature since some array probes were found to yield non-reproducible results due to targeting SNPs instead of methylation, non-unique binding sequences or off-target hybridization [@zhou_comprehensive_2016; @pidsley_critical_2016].
+
+
+```{r setup}
+library(intratumormeth)
+```
+
+## Data format requirements
+
+To run the preprocessing workflow, a `samplesheet` dataframe has to be prepared which associates a given sample id with the location of corresponding IDAT files.
+There should be one green and one red channel IDAT file for each sample which can be distinguished by their file name suffix (e.g. `filename_Red.idat` and `filename_Grn.idat`).
+Column `idat_location` should contain the filename _without_ the red/green suffix.
+Since this is an _intratumor_ heterogeneity study, the individual samples furthermore have to be associated with corresponding patients.
+The patient id corresponding to a given sample should be specified in column `patient_id`.
+Additionally, arbitrary sample-wise metadata can be specified by other columns in the samplesheet (take care not to name them ambiguously).
+
+An exemplary samplesheet is shown here:
+
+```{r exemplary samplesheet, echo=FALSE, message=FALSE}
+# read idat samplesheet and print head
+samplesheet <- read.csv("~/sfb824/packagepdgfra_input/samplesheet.csv")
+samplesheet %>% head()
+```
+
+
+
+This samplesheet contains 213 samples from 46 patients of the SFB824 project B12, as well as 47 samples from 15 patients from the dataset published by @wenger_intratumor_2019 (GEO accession: GSE116298)
+
+## Workflow
+
+Now all required data has been prepared and the actual preprocessing can begin.
+To be able to render this vignette faster, only a 10 sample subset of the data will be processed.
+
+```{r, eval=FALSE}
+preprocess_methylation_data(samplesheet, outputDir = "~/sfb824/packagepdgfra_output/")
+```
+
+
+Once finished, the generated data can be obtained like so:
+
+```{r, eval=FALSE}
+betas <- get_betas(outputDir = "~/sfb824/packagepdgfra_output/", 
+                   normalization = "swan", 
+                   removeNaProbes = TRUE,
+                   probeFilter = NULL,
+                   sampleFilter = NULL)
+betas[1:5,1:5]
+```
+
+
+Before starting further analysis of these methylation levels, a quality control step should be performed in order to detect samples of poor quality (i.e. high average detection p-value) and filter out probes that are associated with low reproducibility (TODO link to Zhou et al. and Pidsley et al.).
+See vignette `quality_control` for further details.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Bibliography
+
+
+
+
