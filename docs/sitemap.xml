@@ -25,7 +25,22 @@
     <loc>/index.html</loc>
   </url>
   <url>
+    <loc>/reference/chr_to_numeric.html</loc>
+  </url>
+  <url>
+    <loc>/reference/chr_to_string.html</loc>
+  </url>
+  <url>
+    <loc>/reference/cnv_genomeplots_per_patient.html</loc>
+  </url>
+  <url>
     <loc>/reference/detection_p_analysis.html</loc>
+  </url>
+  <url>
+    <loc>/reference/extract_details.html</loc>
+  </url>
+  <url>
+    <loc>/reference/extract_segments.html</loc>
   </url>
   <url>
     <loc>/reference/get_betas.html</loc>
@@ -38,6 +53,9 @@
   </url>
   <url>
     <loc>/reference/pipe.html</loc>
+  </url>
+  <url>
+    <loc>/reference/postprocess_conumee_files.html</loc>
   </url>
   <url>
     <loc>/reference/predict_sex.html</loc>

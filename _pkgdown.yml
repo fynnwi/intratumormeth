@@ -1,4 +1,10 @@
 url: ~
 template:
   bootstrap: 5
-
+articles:
+- title: All vignettes
+  navbar: Analysis workflow
+  contents:
+  - preprocessing
+  - quality_control
+  - copynumber

@@ -15,16 +15,15 @@ knitr::opts_chunk$set(
 )
 ```
 
+In this vignette, the package conumee [@hovestadt_conumee_2017] will be used to derive copy number profiles from the methylation intensity data.
+The resulting data will be further post-processed to facilitate downstream analysis.
+
 ```{r setup}
 library(intratumormeth)
 # paths
 outputDir <- "~/sfb824/packagepdgfra_output"
 inputDir <- "~/sfb824/packagepdgfra_input"
 ```
-
-
-In this vignette, the package conumee [@hovestadt_conumee_2017] will be used to derive copy number profiles from the methylation intensity data.
-The resulting data will be further post-processed to facilitate downstream analysis.
 
 
 ## Required data
@@ -150,10 +149,12 @@ detailRegionsNoXy <- detailRegions[!(seqnames(detailRegions) %in% c("chrX", "chr
 
 cnvAnnoEpicXY <- CNV.create_anno(array_type = "EPIC", chrXY = TRUE, detail_regions = detailRegions)
 cnvAnnoEpic <- CNV.create_anno(array_type = "EPIC", chrXY = FALSE, detail_regions = detailRegionsNoXy)
+
+cnvAnnoEpic
 ```
 
 
-Save this:
+Save them:
 
 ```{r, eval=FALSE}
 saveRDS(cnvAnnoEpic, file.path(outputDir, "copynumber", "conumee_annotation_epic.Rdata"))
@@ -198,13 +199,61 @@ run_conumee(outputDir, samplesheet, patientsheet, refF, refM, annoF, annoM)
 ```
 
 This writes a `CNV.analysis` object for each sample into the specified output directory.
-Since these objects contain a lot of data I will extract the important information to decrease load times for later analysis.
+Since these objects contain a lot of data I will extract the important information to avoid having to load large objects into memory later on.
+
+
+
+## Genomeplots
+
+Depending on how many detail regions were specified in the conumee annotation (around 12000 in this case), the resulting plot can become unreadable since each detail region name is printed as a label.
+Therefore, it is possible to manually specify the detail regions that should be printed onto the plot:
+
+```{r}
+detailRegions <- c("MDM4", "MYCN", "TET3", "GLI2", "IDH1", "EPHA3", "PIK3CA", 
+"FGFR3/TACC3", "PDGFRA", "TET2", "TERT", "VEGFA", "MYB", "EGFR", 
+"HGF", "CDK6", "MET", "KIAA1549/BRAF", "FGFR1/TACC1", "MYBL1", 
+"MYC", "CDKN2A/B", "PTCH1", "TET1", "PTEN", "MGMT", "VEGFB", 
+"CCND1", "CCND2", "CDK4", "MDM2", "RB1", "TP53", "NF1", "PPM1D", 
+"C19MC", "SMARCB1", "NF2")
+```
+
+
+
+Generate a CNV genomeplot for every sample organized by patient:
+
+```{r, eval=FALSE}
+cnv_genomeplots_per_patient(outputDir, samplesheet, detailRegions = detailRegions)
+```
 
 
 
 
 
+## CNV Post-processing
 
+- extract detail region CNV
+- extract segments
+  - homogenize segments
+- TODO: detect focal events where a detail region copy number is significantly different from its neighborhood
+
+
+The above `run_conumee()` call generated a lot of data: 4.7 GB in this case.
+The is mostly because there is a lot of redundancy in the information that is stored for each sample.
+To accelerate further analysis and to avoid having to load 4.7 GB into memory, the function `postprocess_conumee_files()` extracts the essential information and saves it to the output directory.
+
+
+```{r, eval=FALSE}
+postprocess_conumee_files(outputDir)
+```
+
+The generated data can now be read in:
+
+```{r}
+segmentCnv <- readRDS(file.path(outputDir, "copynumber", "cnv_segments.Rdata"))
+segmentCnv
+detailCnv <- readRDS(file.path(outputDir, "copynumber", "cnv_detailregions.Rdata"))
+detailCnv
+```
 
 
 

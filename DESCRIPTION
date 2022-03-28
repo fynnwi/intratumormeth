@@ -19,6 +19,7 @@ Imports:
     IRanges,
     magrittr,
     minfi,
+    progress,
     rlang,
     stringr,
     SummarizedExperiment,

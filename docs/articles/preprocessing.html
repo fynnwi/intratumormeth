@@ -41,9 +41,10 @@
 <li class="active nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/copynumber.html">Copynumber</a>
+    <h6 class="dropdown-header" data-toc-skip>Analysis workflow</h6>
     <a class="dropdown-item" href="../articles/preprocessing.html">Preprocessing</a>
     <a class="dropdown-item" href="../articles/quality_control.html">Quality Control</a>
+    <a class="dropdown-item" href="../articles/copynumber.html">Copynumber</a>
   </div>
 </li>
       </ul>
@@ -100,16 +101,30 @@
 </h2>
 <p>To run the preprocessing workflow, a <code>samplesheet</code> dataframe has to be prepared which associates a given sample id with the location of corresponding IDAT files. There should be one green and one red channel IDAT file for each sample which can be distinguished by their file name suffix (e.g. <code>filename_Red.idat</code> and <code>filename_Grn.idat</code>). Column <code>idat_location</code> should contain the filename <em>without</em> the red/green suffix. Since this is an <em>intratumor</em> heterogeneity study, the individual samples furthermore have to be associated with corresponding patients. The patient id corresponding to a given sample should be specified in column <code>patient_id</code>. Additionally, arbitrary sample-wise metadata can be specified by other columns in the samplesheet (take care not to name them ambiguously).</p>
 <p>An exemplary samplesheet is shown here:</p>
+<pre><code><span class="co">#&gt;   sample_id patient_id                                       idat_location</span>
+<span class="co">#&gt; 1   sfb01_1      sfb01 ~/data/methylation_data/Pat01.1/202212330261_R07C01</span>
+<span class="co">#&gt; 2   sfb01_2      sfb01 ~/data/methylation_data/Pat01.2/202242420132_R07C01</span>
+<span class="co">#&gt; 3   sfb01_3      sfb01 ~/data/methylation_data/Pat01.3/202212330261_R06C01</span>
+<span class="co">#&gt; 4   sfb02_1      sfb02 ~/data/methylation_data/Pat02.1/202242420132_R02C01</span>
+<span class="co">#&gt; 5   sfb02_2      sfb02 ~/data/methylation_data/Pat02.2/202242420132_R06C01</span>
+<span class="co">#&gt; 6   sfb02_3      sfb02 ~/data/methylation_data/Pat02.3/202242420132_R01C01</span>
+<span class="co">#&gt;   project</span>
+<span class="co">#&gt; 1  SFB824</span>
+<span class="co">#&gt; 2  SFB824</span>
+<span class="co">#&gt; 3  SFB824</span>
+<span class="co">#&gt; 4  SFB824</span>
+<span class="co">#&gt; 5  SFB824</span>
+<span class="co">#&gt; 6  SFB824</span></code></pre>
 <p>This samplesheet contains 213 samples from 46 patients of the SFB824 project B12, as well as 47 samples from 15 patients from the dataset published by <span class="citation">Wenger et al. (2019)</span> (GEO accession: GSE116298)</p>
 </div>
 <div class="section level2">
 <h2 id="workflow">Workflow<a class="anchor" aria-label="anchor" href="#workflow"></a>
 </h2>
 <p>Now all required data has been prepared and the actual preprocessing can begin. To be able to render this vignette faster, only a 10 sample subset of the data will be processed.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/preprocess_methylation_data.html">preprocess_methylation_data</a></span><span class="op">(</span><span class="va">samplesheet</span>, outputDir <span class="op">=</span> <span class="st">"~/sfb824/packagepdgfra_output/"</span><span class="op">)</span></code></pre></div>
 <p>Once finished, the generated data can be obtained like so:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">betas</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_betas.html">get_betas</a></span><span class="op">(</span>outputDir <span class="op">=</span> <span class="st">"~/sfb824/packagepdgfra_output/"</span>, 
                    normalization <span class="op">=</span> <span class="st">"swan"</span>, 
                    removeNaProbes <span class="op">=</span> <span class="cn">TRUE</span>,
