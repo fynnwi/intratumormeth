@@ -10,12 +10,17 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
 Imports: 
+    conumee,
     dplyr,
+    GenomeInfoDb,
     GenomicRanges,
     ggplot2,
+    IlluminaHumanMethylationEPICanno.ilm10b4.hg19,
+    IRanges,
     magrittr,
     minfi,
     rlang,
+    stringr,
     SummarizedExperiment,
     tibble,
     tidyr

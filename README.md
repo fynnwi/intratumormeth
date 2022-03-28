@@ -19,7 +19,8 @@ devtools::install_github("fynnwi/intratumormeth")
 
 ## Workflow
 
-Every stage of the workflow is described in a separate vignette:
+Every stage of the analysis pipeline is described in a separate vignette
+(see articles):
 
 1.  `preprocessing`: read IDAT files, extract methylation values
 2.  `quality_control`: investigate detection p-values, tumor purity,
@@ -28,7 +29,7 @@ Every stage of the workflow is described in a separate vignette:
 4.  `classification`: evaluate glioma subtype and MGMT promoter
     methylation
 5.  `dimensionality_reduction`: perform PCA and t-SNE to find clusters
-6.  `phylogeny`: run TuMult separate CNV data
+6.  `phylogeny`: run TuMult to find phylogeny from CNV data
 
 <!-- ## To be implemented: -->
 <!-- Batch correction -->

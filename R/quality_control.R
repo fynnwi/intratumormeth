@@ -38,7 +38,7 @@ detection_p_analysis <- function(outputDir, pThreshold = 0.01) {
   poorSamplePlot <- ggplot(meanDetP, aes(x = .data$sample_id, y = .data$mean_detp, fill = .data$mean_detp < pThreshold)) +
     geom_hline(yintercept = pThreshold, linetype = "dashed") +
     geom_col() +
-    pdgfra_theme() +
+    intratumormeth_theme() +
     theme(axis.text.x = element_blank(),
           legend.position = c(0,1),
           legend.justification = c("left", "top")) +
@@ -49,7 +49,7 @@ detection_p_analysis <- function(outputDir, pThreshold = 0.01) {
   # make failing probes plot
   failingProbesPlot <- ggplot(failingProbes, aes(x = .data$failed_in_n_samples)) +
     geom_histogram(binwidth = 1) +
-    pdgfra_theme() +
+    intratumormeth_theme() +
     labs(title = paste0("Probes exceeding det. p-value (", pThreshold, ") in multiple samples"),
          x = "Number of samples for which a given probe fails",
          y = "Number of probes")
@@ -126,14 +126,14 @@ predict_sex <- function(outputDir, normalization = "raw", predictionCutoff = -2)
          x = "Beta value",
          y = "Density",
          color = "Predicted Sex") +
-    pdgfra_theme()
+    intratumormeth_theme()
   pY <- ggplot(chrYbetas, aes(x = .data$beta, color = .data$predicted_sex, group = .data$sample_id)) +
     geom_density() +
     labs(title = "Chromosome Y beta value densities",
          x = "Beta value",
          y = "Density",
          color = "Predicted Sex") +
-    pdgfra_theme()
+    intratumormeth_theme()
 
   # cutoff plot
   predSex["xy_gap"] <- predSex[["yMed"]] - predSex[["xMed"]]
@@ -146,7 +146,7 @@ predict_sex <- function(outputDir, normalization = "raw", predictionCutoff = -2)
                           predictionCutoff, "between chrY and chrX are classified as female"),
          x = "chrY median intensity - chrX median intensity",
          y = "", color = "Predicted sex") +
-    pdgfra_theme()
+    intratumormeth_theme()
 
   plots <- list()
   plots[["chrX"]] <- pX

@@ -1,6 +1,7 @@
 ---
 title: "Quality Control"
 output: rmarkdown::html_vignette
+bibliography: "references.bib"
 vignette: >
   %\VignetteIndexEntry{Quality Control}
   %\VignetteEngine{knitr::rmarkdown}
@@ -10,7 +11,8 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  eval = FALSE
 )
 ```
 
@@ -52,11 +54,13 @@ detP$meanDetP %>%
 ```
 
 
-These samples have an average detection p-value higher than 0.01.
+These samples have an average detection p-value higher than 0.01 and should therefore be excluded from further analysis.
 
-As can be seen from the function output, there are quite a few poor-quality beta values in the dataset.
-These are distributed across many probes, so that excluding the respective probes for all samples is not an option.
-A list of probes that fail for one or more samples is return
+Next, the number of individual probes failing in a given sample will be investigated.
+As can be seen in the function output, there are quite a few poor-quality beta values in the dataset.
+These are distributed across many probes, so that excluding the respective probes for all samples is not an option since this would remove almost 500,000 CpG methylation levels in our case.
+
+A list of probes that fail for one or more samples is returned:
 
 ```{r}
 detP$failingProbes %>% head()
@@ -72,6 +76,7 @@ detP$failingProbesPlot
 
 
 For this study, probes that fail in more than three samples will be excluded, as well as samples that have an average detection p-value greater than 0.01.
+The corresponding sample and probe ids will be stored on the disk in order to later use these filters when loading the methylation beta values.
 
 ```{r}
 probeFilter <- detP$failingProbes$probe_id[detP$failingProbes$failed_in_n_samples > 3]
@@ -119,13 +124,49 @@ predictedSex$predicted_sex %>%
 ```
 
 
-Compare the predicted sex with the actual sex:
+Compare the predicted sex with the actual sex and filter for those cases where the predicted sex does not match the actual sex:
 
 ```{r}
 patientsheet <- read.csv(file.path(inputDir, "patientsheet.csv"))
 samplesheet %>% dplyr::left_join(patientsheet, by = "patient_id") %>%
   dplyr::left_join(predictedSex$predicted_sex, by = "sample_id") %>% 
   dplyr::filter(predicted_sex != sex)
+```
+
+In sample sfb18_1, predicted and actual sex deviate, which can for example indicate poor sample preparation or sample mislabeling.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+```{r, include=FALSE}
+rm(list = ls())
+gc()
 ```
 
 
@@ -139,13 +180,7 @@ samplesheet %>% dplyr::left_join(patientsheet, by = "patient_id") %>%
 
 
 
-
-
-
-
-
-
-
+## References
 
 
 

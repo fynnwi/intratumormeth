@@ -1,7 +1,7 @@
 ---
 title: "Preprocessing"
 output: rmarkdown::html_vignette
-bibliography: "../bibliography.bib"
+bibliography: "references.bib"
 vignette: >
   %\VignetteIndexEntry{Preprocessing}
   %\VignetteEngine{knitr::rmarkdown}
@@ -11,7 +11,8 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  eval = FALSE
 )
 ```
 
@@ -81,7 +82,7 @@ betas[1:5,1:5]
 ```
 
 
-Before starting further analysis of these methylation levels, a quality control step should be performed in order to detect samples of poor quality (i.e. high average detection p-value) and filter out probes that are associated with low reproducibility (TODO link to Zhou et al. and Pidsley et al.).
+Before starting further analysis of these methylation levels, a quality control step should be performed in order to detect samples of poor quality (i.e. high average detection p-value) and filter out probes that are associated with low reproducibility [@zhou_comprehensive_2016; @pidsley_critical_2016].
 See vignette `quality_control` for further details.
 
 
@@ -89,6 +90,10 @@ See vignette `quality_control` for further details.
 
 
 
+```{r, include=FALSE}
+rm(list = ls())
+gc()
+```
 
 
 
@@ -105,8 +110,7 @@ See vignette `quality_control` for further details.
 
 
 
-
-## Bibliography
+## References
 
 
 
